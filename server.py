@@ -29,7 +29,7 @@ async def process_record(record):
                     }
                     for k, v in {
                         'app': record['kubernetes']['labels']['app'],
-                        'namespace_name': record['kubernetes']['namespace_name'],
+                        'namespace': record['kubernetes']['namespace_name'],
                         'name': message['name'],
                         'lineno': message['lineno'],
                         'funcName': message['funcName'],
