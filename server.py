@@ -31,7 +31,6 @@ async def process_record(record):
                         'app': record['kubernetes']['labels']['app'],
                         'namespace': record['kubernetes']['namespace_name'],
                         'name': message['name'],
-                        'lineno': message['lineno'],
                         'funcName': message['funcName'],
                         'levelname': message['levelname'],
                         'exc_info': message.get('exc_info'),
