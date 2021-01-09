@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: log-router
+  labels:
+    app: log-router
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: log-router
+  template:
+    metadata:
+      labels:
+        app: log-router
+    spec:
+      volumes:
+        - name: server-py
+          configMap:
+            name: server-py
+      containers:
+        - name: log-router
+          image: python:3.8.5
+          args: ['bash', '-c', 'pip install aiohttp slack-sdk && python /server.py']
+          ports:
+            - containerPort: 5170
+          env:
+            - name: SLACK_WEBHOOK_URL
+              valueFrom:
+                secretKeyRef:
+                  name: log-router-config
+                  key: webhook-url
+          volumeMounts:
+            - name: server-py
+              mountPath: /server.py
+              subPath: server.py
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: log-router
+  labels:
+    app: log-router
+spec:
+  type: ClusterIP
+  selector:
+    app: log-router
+  ports:
+    - name: log-router
+      port: 5170
