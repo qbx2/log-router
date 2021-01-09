@@ -18,7 +18,8 @@ async def process_record(record):
     if color:
         await slack.send(
             attachments=[{
-                'title': message['message'],
+                'title': 'Log Router',
+                'text': message['message'],
                 'color': color,
                 'fields': [
                     {
