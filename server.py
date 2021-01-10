@@ -20,6 +20,14 @@ async def process_record(record):
     }.get(message['levelname'])
 
     if color:
+        try:
+            kubernetes_info = {
+                'app': record['kubernetes']['labels']['app'],
+                'namespace': record['kubernetes']['namespace_name'],
+            }
+        except KeyError:
+            kubernetes_info = {}
+
         await slack.send(
             attachments=[{
                 'title': 'Log Router',
@@ -32,8 +40,7 @@ async def process_record(record):
                         'short': k not in {'exc_info'},
                     }
                     for k, v in {
-                        'app': record['kubernetes']['labels']['app'],
-                        'namespace': record['kubernetes']['namespace_name'],
+                        **kubernetes_info,
                         'name': message['name'],
                         'funcName': message['funcName'],
                         'levelname': message['levelname'],
