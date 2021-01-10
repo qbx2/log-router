@@ -9,7 +9,11 @@ slack = AsyncWebhookClient(url=os.environ['SLACK_WEBHOOK_URL'])
 
 
 async def process_record(record):
-    message = json.loads(record['message'])
+    try:
+        message = json.loads(record['message'])
+    except (KeyError, json.decoder.JSONDecodeError):
+        message = record
+
     color = {
         'ERROR': 'danger',
         'WARNING': 'warning',
@@ -55,8 +59,6 @@ async def handle(reader, writer):
 
             try:
                 await process_record(record)
-            except (KeyError, json.decoder.JSONDecodeError):
-                pass
             except Exception:
                 traceback.print_exc()
     except Exception:
