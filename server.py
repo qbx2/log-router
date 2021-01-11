@@ -46,7 +46,6 @@ async def process_record(record):
                         'funcName': message['funcName'],
                         'levelname': message['levelname'],
                         'exc_info': message.get('exc_info'),
-                        **message.get('extra', {}),
                     }.items()
                 ],
             }]
