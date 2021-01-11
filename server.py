@@ -24,6 +24,7 @@ async def process_record(record):
             kubernetes_info = {
                 'app': record['kubernetes']['labels']['app'],
                 'namespace': record['kubernetes']['namespace_name'],
+                'pod': record['kubernetes']['pod_name'],
             }
         except KeyError:
             kubernetes_info = {}
@@ -45,6 +46,7 @@ async def process_record(record):
                         'funcName': message['funcName'],
                         'levelname': message['levelname'],
                         'exc_info': message.get('exc_info'),
+                        **message.get('extra', {}),
                     }.items()
                 ],
             }]
