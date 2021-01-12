@@ -3,9 +3,9 @@ import json
 import os
 import traceback
 
-from slack_sdk.webhook.async_client import AsyncWebhookClient
+from slack_sdk.web.async_client import AsyncWebClient
 
-slack = AsyncWebhookClient(url=os.environ['SLACK_WEBHOOK_URL'])
+slack = AsyncWebClient(token=os.environ['SLACK_BOT_TOKEN'])
 
 
 async def process_record(record):
@@ -14,10 +14,11 @@ async def process_record(record):
     except (KeyError, json.decoder.JSONDecodeError):
         message = record
 
+    levelname = message['levelname']
     color = {
         'ERROR': 'danger',
         'WARNING': 'warning',
-    }.get(message['levelname'])
+    }.get(levelname)
 
     if color:
         try:
@@ -31,7 +32,8 @@ async def process_record(record):
 
         request_info = {'request': str(message['request'])} if 'request' in message else {}
 
-        await slack.send(
+        await slack.chat_postMessage(
+            channel=f'monitoring-{levelname.lower()}',
             attachments=[{
                 'title': 'Log Router',
                 'text': message['message'],
