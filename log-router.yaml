@@ -25,11 +25,11 @@ spec:
           ports:
             - containerPort: 5170
           env:
-            - name: SLACK_WEBHOOK_URL
+            - name: SLACK_BOT_TOKEN
               valueFrom:
                 secretKeyRef:
                   name: log-router-config
-                  key: webhook-url
+                  key: slack-bot-token
             - name: PIP_DISABLE_PIP_VERSION_CHECK
               value: '1'
             - name: PIP_NO_CACHE_DIR

@@ -18,3 +18,6 @@ kubectl apply -k log-router
     Host log-router
     Format json_lines
 ```
+
+## Add slack app
+https://github.com/slackapi/python-slack-sdk/blob/main/tutorial/01-creating-the-slack-app.md
