@@ -29,6 +29,8 @@ async def process_record(record):
         except KeyError:
             kubernetes_info = {}
 
+        request_info = {'request': str(message['request'])} if 'request' in message else {}
+
         await slack.send(
             attachments=[{
                 'title': 'Log Router',
@@ -46,6 +48,7 @@ async def process_record(record):
                         'funcName': message['funcName'],
                         'levelname': message['levelname'],
                         'exc_info': message.get('exc_info'),
+                        **request_info,
                     }.items()
                 ],
             }]
